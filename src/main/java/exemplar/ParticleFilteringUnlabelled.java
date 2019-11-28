@@ -39,7 +39,7 @@ public class ParticleFilteringUnlabelled {
     
     
     //procedure declaration
-    @Procedure(value = "particlefiltering", mode=Mode.READ)
+    @Procedure(value = "particlefiltering.unlabelled", mode=Mode.READ)
     @Description("Returns nodes and an attached score given a nodeList, a score threshold, a #particles variable")
     public Stream<Output> search( @Name("nodeList") List<Node> nodeList, @Name("threshold") Double minThreshold, @Name("particles") Double num_particles){
     	
