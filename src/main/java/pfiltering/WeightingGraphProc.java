@@ -1,4 +1,4 @@
-package exemplar;
+package pfiltering;
 
 
 import java.util.HashMap;
@@ -69,36 +69,11 @@ public class WeightingGraphProc {
    	 		value=relSet.get(type);
    	 		r.setProperty("exemplarWeight", value);
    	 	}
-
-    
-
-		
-    	
-    	
-    	//System.out.println("I'm out");
-    	
-    	/*for(Relationship r:db.getAllRelationships()){
-    		relationshipCount.put(r.getType(), relationshipCount.get(r.getType())+1);
-    		totalRelationshipCount++;
-    	}
-    	for(Relationship r:db.getAllRelationships()) {
-    		currentRelationshipTypeFrequency=((double)relationshipCount.get(r.getType())/(double)totalRelationshipCount);
-    		r.setProperty("exemplarWeight", (-1*(Math.log(currentRelationshipTypeFrequency))));
-    	}*/
-    	/*rs=db.execute("MATCH p=()-[]-() RETURN p");
-    	while(rs.hasNext()) {
-    		returnList.add((Path)rs.next().get("p"));
-    	}*/
-    	
-    	
-    		
-    	
-    	//return returnList.stream().map(path->new Output(path));
     	
     }
     
     
-    //support class to return a stream of T, where T is a Path (weird Neo4j constraints :\ )
+    //support class to return a stream of T, where T is a Path 
     public class Output{
     	public Path out;
     		public Output(Path out) {

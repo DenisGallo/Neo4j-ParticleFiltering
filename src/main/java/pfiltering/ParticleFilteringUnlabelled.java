@@ -1,10 +1,11 @@
-package exemplar;
+package pfiltering;
 
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.PriorityQueue;
 import java.util.Map.Entry;
 import java.util.stream.Stream;
 
@@ -16,13 +17,13 @@ import org.neo4j.procedure.Mode;
 import org.neo4j.procedure.Name;
 import org.neo4j.procedure.Procedure;
 
-import exemplar.ParticleFiltering.Output;
+//import exemplar.ParticleFilteringUnlabelled.Output;
 
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Relationship;
 
 
-public class ParticleFiltering {
+public class ParticleFilteringUnlabelled {
 	
 
 	
@@ -37,7 +38,7 @@ public class ParticleFiltering {
     
     
     //procedure declaration
-    @Procedure(value = "particlefiltering", mode=Mode.READ)
+    @Procedure(value = "particlefiltering.unlabelled", mode=Mode.READ)
     @Description("Returns nodes and an attached score given a nodeList, a score threshold, a #particles variable")
     public Stream<Output> search( @Name("nodeList") List<Node> nodeList, @Name("threshold") Double minThreshold, @Name("particles") Double num_particles){
     	
@@ -52,10 +53,10 @@ public class ParticleFiltering {
     	double c=0.15;
     	double tao=1.0/num_particles;
     	double min_threshold=minThreshold;
-    	PriorityQueue<Neighbour> neighbours = new PriorityQueue<>();
+    	List<Long> neighbours=new ArrayList<Long>();
     	Map<Long, Double> pprNodes=new HashMap<Long, Double>(); //resulting list containing nodes and scores
     	
-    	double currentweight;
+    	
     	for(Node n:nodeList) {
     		p.put(n.getId(), ((1.0/nodeList.size())*(num_particles))); 
     		v.put(n.getId(), ((1.0/nodeList.size())*(num_particles))); 
@@ -65,25 +66,24 @@ public class ParticleFiltering {
     		for(Long node:p.keySet()) {
     			double particles=p.get(node)*(1-c);
     			Node startingNode=db.getNodeById(node);
-    			double totalweight=0;
-    			neighbours=new PriorityQueue<>();
+    			neighbours=new ArrayList<Long>();
+    			int neighboursCount=0;
     			for(Relationship relationship:startingNode.getRelationships()){
-    				currentweight=(double)relationship.getProperty("exemplarWeight");
-    				neighbours.add(new Neighbour(relationship.getOtherNode(startingNode).getId(), currentweight));
-    				totalweight+=currentweight;
+    				neighbours.add(relationship.getOtherNode(startingNode).getId());
+    				neighboursCount++;
     			}
-    			while(!neighbours.isEmpty()) {
-    				Neighbour n=neighbours.remove();
+    			Collections.shuffle(neighbours);
+    			for(Long n:neighbours) {
     				if (particles<=tao)
     					break;
-    				passing=particles*(n.getValue()/totalweight);
+    				passing=particles/(neighboursCount);
     				if (passing<=tao)
     					passing=tao;
     				particles=particles-passing;
-    				if(aux.containsKey(n.getKey())){
-    					passing+=aux.get(n.getKey());
+    				if(aux.containsKey(n)){
+    					passing+=aux.get(n);
     				}
-    				aux.put(n.getKey(), passing);
+    				aux.put(n, passing);
     			}
     		}
     		p=aux;
@@ -96,7 +96,6 @@ public class ParticleFiltering {
     				v.put(node, p.get(node));
     		}
     	}
-    	//return v
     	
     	//filtering v with min_threshold
     	for (Entry<Long, Double> e:v.entrySet()) {
