@@ -8,6 +8,9 @@ In this repository it is possible to:
   - Use the weighting graph procedure
   - Use both of the weighted or unweighted forms of particle filtering
 
+This project is presented in the paper "Personalized Page Rank on Knowledge Graphs: Particle Filtering is all you need!" (http://people.cs.aau.dk/~matteo/pdf/EDBT20-particle-filtering.pdf)
+
+
 ## What's inside
 
 You can find the java files of particle filtering and weighting graph, a pom file.
