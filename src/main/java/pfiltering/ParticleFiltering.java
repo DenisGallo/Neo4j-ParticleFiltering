@@ -61,15 +61,15 @@ public class ParticleFiltering {
         
         //particle filtering
 
-    	Map<Long,Double> p=new HashMap<Long,Double>();
-    	Map<Long,Double> v=new HashMap<Long,Double>();
+    	Map<Long,Double> p= new HashMap<>();
+    	Map<Long,Double> v= new HashMap<>();
     	Map<Long, Double> aux;
     	double passing;
     	double c=0.15;
     	double tao=1.0/num_particles;
     	double min_threshold=minThreshold;
-    	PriorityQueue<Neighbour> neighbours = new PriorityQueue<>();
-    	Map<Long, Double> pprNodes=new HashMap<Long, Double>(); //resulting list containing nodes and scores
+    	PriorityQueue<Neighbour> neighbours;
+    	Map<Long, Double> pprNodes= new HashMap<>(); //resulting list containing nodes and scores
     	
     	double currentweight;
     	for(Node n:nodeList) {
@@ -77,7 +77,7 @@ public class ParticleFiltering {
     		v.put(n.getId(), ((1.0/nodeList.size())*(num_particles))); 
     	}
     	while(!p.isEmpty()) {
-    		aux=new HashMap<Long, Double>();
+    		aux= new HashMap<>();
     		for(Long node:p.keySet()) {
     			double particles=p.get(node)*(1-c);
     			Node startingNode=db.getNodeById(node);

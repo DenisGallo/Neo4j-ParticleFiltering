@@ -62,15 +62,15 @@ public class ParticleFilteringUnlabelled {
         
         //particle filtering
 
-    	Map<Long,Double> p=new HashMap<Long,Double>();
-    	Map<Long,Double> v=new HashMap<Long,Double>();
+    	Map<Long,Double> p= new HashMap<>();
+    	Map<Long,Double> v= new HashMap<>();
     	Map<Long, Double> aux;
     	double passing;
     	double c=0.15;
     	double tao=1.0/num_particles;
     	double min_threshold=minThreshold;
-    	List<Long> neighbours=new ArrayList<Long>();
-    	Map<Long, Double> pprNodes=new HashMap<Long, Double>(); //resulting list containing nodes and scores
+    	List<Long> neighbours;
+    	Map<Long, Double> pprNodes= new HashMap<>(); //resulting list containing nodes and scores
     	
     	
     	for(Node n:nodeList) {
@@ -78,11 +78,11 @@ public class ParticleFilteringUnlabelled {
     		v.put(n.getId(), ((1.0/nodeList.size())*(num_particles))); 
     	}
     	while(!p.isEmpty()) {
-    		aux=new HashMap<Long, Double>();
+    		aux= new HashMap<>();
     		for(Long node:p.keySet()) {
     			double particles=p.get(node)*(1-c);
     			Node startingNode=db.getNodeById(node);
-    			neighbours=new ArrayList<Long>();
+    			neighbours= new ArrayList<>();
     			int neighboursCount=0;
     			for(Relationship relationship:startingNode.getRelationships()){
     				neighbours.add(relationship.getOtherNode(startingNode).getId());
