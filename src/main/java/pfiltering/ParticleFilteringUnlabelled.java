@@ -35,7 +35,23 @@ public class ParticleFilteringUnlabelled {
     //useful for logging
     @Context
     public Log log;
-    
+
+	/**
+	 *
+	 * @see <a href="http://people.cs.aau.dk/~matteo/pdf/EDBT20-particle-filtering.pdf">Personalized Page Rank on Knowledge Graphs: Particle
+	 * Filtering is all you need!</a>
+	 *
+	 * <ul>
+	 *     <li>Denis Gallo</li>
+	 *     <li>Matteo Lissandrini</li>
+	 *     <li>Yannis Velegrakis</li>
+	 * </ul>
+	 *
+	 * @param nodeList the list of the starting nodes for the algorithm
+	 * @param minThreshold the minimum threshold a node needs to each to be considered in the result list
+	 * @param num_particles the number of particles to inject to the starting nodes
+	 * @return a list of nodes with an attached score based on the particle filtering algorithm
+	 */
     
     //procedure declaration
     @Procedure(value = "particlefiltering.unlabelled", mode=Mode.READ)
