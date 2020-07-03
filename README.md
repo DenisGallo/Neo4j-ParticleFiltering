@@ -8,14 +8,7 @@ In this repository it is possible to:
   - Use the weighting graph procedure
   - Use both of the weighted or unweighted forms of particle filtering
 
-This project is presented in the paper:
-
-	 * Gallo, Denis; Lissandrini, Matteo; and Velegrakis, Yannis.
-	 * “Personalized Page Rank on Knowledge Graphs: Particle Filtering is all you need!.”
-	 * Proceedings of the 23th International Conference on Extending Database Technology, EDBT 2020 (169-180).
-	 * http://dx.doi.org/10.5441/002/edbt.2020.54
-
-Please cite this work as:
+This project is presented in the following paper:
 
 > Gallo, Denis; Lissandrini, Matteo; and Velegrakis, Yannis.
 > "Personalized Page Rank on Knowledge Graphs: Particle Filtering is all you need!."
