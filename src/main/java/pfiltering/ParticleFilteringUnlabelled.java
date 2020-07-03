@@ -38,14 +38,10 @@ public class ParticleFilteringUnlabelled {
 
 	/**
 	 *
-	 * @see <a href="http://people.cs.aau.dk/~matteo/pdf/EDBT20-particle-filtering.pdf">Personalized Page Rank on Knowledge Graphs: Particle
-	 * Filtering is all you need!</a>
-	 *
-	 * <ul>
-	 *     <li>Denis Gallo</li>
-	 *     <li>Matteo Lissandrini</li>
-	 *     <li>Yannis Velegrakis</li>
-	 * </ul>
+	 * Gallo, Denis; Lissandrini, Matteo; and Velegrakis, Yannis.
+	 * “Personalized Page Rank on Knowledge Graphs: Particle Filtering is all you need!.”
+	 * Proceedings of the 23th International Conference on Extending Database Technology, EDBT 2020 (169-180).
+	 * http://dx.doi.org/10.5441/002/edbt.2020.54
 	 *
 	 * @param nodeList the list of the starting nodes for the algorithm
 	 * @param minThreshold the minimum threshold a node needs to each to be considered in the result list
