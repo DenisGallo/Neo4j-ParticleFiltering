@@ -10,6 +10,12 @@ In this repository it is possible to:
 
 This project is presented in the paper "Personalized Page Rank on Knowledge Graphs: Particle Filtering is all you need!" (http://people.cs.aau.dk/~matteo/pdf/EDBT20-particle-filtering.pdf)
 
+Please cite this work as:
+
+> Gallo, Denis; Lissandrini, Matteo; and Velegrakis, Yannis.
+> "Personalized Page Rank on Knowledge Graphs: Particle Filtering is all you need!."
+> Proceedings of the 23th International Conference on Extending Database Technology, EDBT 2020 (169-180). 
+
 
 ## What's inside
 
