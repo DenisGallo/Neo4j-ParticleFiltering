@@ -40,7 +40,7 @@
   </developers>
 
   <properties>
-    <neo4j.version>3.5.2</neo4j.version>
+    <neo4j.version>4.2.0</neo4j.version>
   </properties>
 
   <dependencies>

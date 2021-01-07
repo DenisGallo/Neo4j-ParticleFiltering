@@ -9,6 +9,7 @@ import java.util.Map.Entry;
 import java.util.stream.Stream;
 
 import org.neo4j.graphdb.GraphDatabaseService;
+import org.neo4j.graphdb.Transaction;
 import org.neo4j.logging.Log;
 import org.neo4j.procedure.Context;
 import org.neo4j.procedure.Description;
@@ -77,6 +78,8 @@ public class ParticleFiltering {
     		aux= new HashMap<>();
     		for(Long node:p.keySet()) {
     			double particles=p.get(node)*(1-c);
+    			//Transaction t=db.beginTx();
+    			//Node startingNode=t.getNodeById(node);
     			Node startingNode=db.getNodeById(node);
     			double totalweight=0;
     			neighbours=new PriorityQueue<>();
