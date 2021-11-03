@@ -30,7 +30,18 @@ You can find the java files of particle filtering and weighting graph, a pom fil
 
 ## Guide
 
-First of all a "maven install" is needed on the pom file to create the jar file. The jar file can be found then in `/target/testprocedure.jar`. This jar file needs to be put into the /plugins folder of your neo4j installation. When the jar file is inside the `/plugins` folder, restart your neo4j server. After restarting the server, all procedures are available. It could be that you need to allow external procedures in your configuration file of Neo4j, since these type of procedures are marked as "insecure".
+First of all a "maven install" is needed on the pom file to create the jar file. The jar file can be found then in `/target/particlefiltering-1.0.0.jar`. This jar file needs to be put into the /plugins folder of your neo4j installation.
+When the jar file is inside the `/plugins` folder, restart your neo4j server.
+After restarting the server, all procedures are available. 
+It could be that you need to allow external procedures in your configuration file of Neo4j, since these type of procedures are marked as "insecure".
+
+```bash
+git clone  git@github.com:DenisGallo/Neo4j-ParticleFiltering.git
+cd Neo4j-ParticleFiltering/
+mvn package
+cp target/particlefiltering-1.0.0.jar ../path/to/neo4j-server/plugins/
+../path/to/neo4j-server/bin/neo4j restart
+```
 
 The procedure can be called by:
 
