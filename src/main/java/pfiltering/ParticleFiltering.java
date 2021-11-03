@@ -9,6 +9,7 @@ import java.util.Map.Entry;
 import java.util.stream.Stream;
 
 import org.neo4j.graphdb.GraphDatabaseService;
+import org.neo4j.graphdb.Transaction;
 import org.neo4j.logging.Log;
 import org.neo4j.procedure.Context;
 import org.neo4j.procedure.Description;
@@ -67,6 +68,7 @@ public class ParticleFiltering {
     	double min_threshold=minThreshold;
     	PriorityQueue<Neighbour> neighbours;
     	Map<Long, Double> pprNodes= new HashMap<>(); //resulting list containing nodes and scores
+		Transaction t=db.beginTx();
     	
     	double currentweight;
     	for(Node n:nodeList) {
@@ -77,7 +79,8 @@ public class ParticleFiltering {
     		aux= new HashMap<>();
     		for(Long node:p.keySet()) {
     			double particles=p.get(node)*(1-c);
-    			Node startingNode=db.getNodeById(node);
+    			Node startingNode=t.getNodeById(node);
+    			//Node startingNode=db.getNodeById(node);
     			double totalweight=0;
     			neighbours=new PriorityQueue<>();
     			for(Relationship relationship:startingNode.getRelationships()){
@@ -116,7 +119,10 @@ public class ParticleFiltering {
     		if(e.getValue()>=min_threshold)
     			pprNodes.put(e.getKey(), e.getValue());
     	}
-    	
+
+		t.commit();
+    	t.close();
+
     	//returning <ids, scores>
     	return pprNodes.entrySet().stream().map(es->new Output(es.getKey(), es.getValue()));
 

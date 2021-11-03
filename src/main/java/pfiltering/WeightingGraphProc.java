@@ -4,12 +4,7 @@ package pfiltering;
 import java.util.HashMap;
 
 
-
-import org.neo4j.graphdb.GraphDatabaseService;
-import org.neo4j.graphdb.Path;
-import org.neo4j.graphdb.Relationship;
-import org.neo4j.graphdb.RelationshipType;
-import org.neo4j.graphdb.Result;
+import org.neo4j.graphdb.*;
 import org.neo4j.logging.Log;
 import org.neo4j.procedure.Context;
 import org.neo4j.procedure.Description;
@@ -36,21 +31,25 @@ public class WeightingGraphProc {
    	 	String type;
    	 	HashMap<String, Double> relSet=new HashMap<String, Double>();
    	 	double value;
+   	 	Transaction t=db.beginTx();
    	 	
    	 	//getting total relationship count
-   	 	
-   	 	rs=db.execute("MATCH (n)-[r]->() RETURN count(r) as cnt");
+
+		rs=t.execute("MATCH (n)-[r]->() RETURN count(r) as cnt");
+   	 	//rs=db.execute("MATCH (n)-[r]->() RETURN count(r) as cnt");
    	 	totalRelationshipCount=(long) rs.next().get("cnt");
    	 	
    	 	//initialize set
-   	 	
-   	 	for(RelationshipType rt:db.getAllRelationshipTypes()) {
+
+		for(RelationshipType rt:t.getAllRelationshipTypes()) {
+		//for(RelationshipType rt:db.getAllRelationshipTypes()) {
    	 		relSet.put(rt.toString(), 0.0);
    	 	}
    	 	
    	 	//getting relationship count for each type
-   	 	
-   	 	for(Relationship r:db.getAllRelationships()) {
+
+		for(Relationship r:t.getAllRelationships()) {
+		//for(Relationship r:db.getAllRelationships()) {
    	 		type=r.getType().toString();
    	 		value=relSet.get(type)+1;
    	 		relSet.put(type, value);
@@ -64,11 +63,14 @@ public class WeightingGraphProc {
    	 	}
    	 	
    	 	//update
-   	 	for(Relationship r:db.getAllRelationships()) {
+		for(Relationship r:t.getAllRelationships()) {
+		//for(Relationship r:db.getAllRelationships()) {
    	 		type=r.getType().toString();
    	 		value=relSet.get(type);
    	 		r.setProperty("exemplarWeight", value);
    	 	}
+		t.commit();
+		t.close();
     	
     }
     

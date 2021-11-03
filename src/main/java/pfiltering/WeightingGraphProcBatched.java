@@ -7,11 +7,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 
-import org.neo4j.graphdb.GraphDatabaseService;
-import org.neo4j.graphdb.Node;
-import org.neo4j.graphdb.Relationship;
-import org.neo4j.graphdb.RelationshipType;
-import org.neo4j.graphdb.Result;
+import org.neo4j.graphdb.*;
 import org.neo4j.logging.Log;
 import org.neo4j.procedure.Context;
 import org.neo4j.procedure.Description;
@@ -40,21 +36,23 @@ public class WeightingGraphProcBatched {
    	 	HashMap<String, Double> relSet=new HashMap<String, Double>();
    	 	double value;
    	 	boolean modified=false;
+   	 	Transaction t=db.beginTx();
    	 	
    	 	//getting total relationship count
-   	 	
-   	 	rs=db.execute("MATCH (n)-[r]->() RETURN count(r) as cnt");
+
+		rs=t.execute("MATCH (n)-[r]->() RETURN count(r) as cnt");
+   	 	//rs=db.execute("MATCH (n)-[r]->() RETURN count(r) as cnt");
    	 	totalRelationshipCount=(long) rs.next().get("cnt");
    	 	
    	 	//initialize set
-   	 	
-   	 	for(RelationshipType rt:db.getAllRelationshipTypes()) {
+		for(RelationshipType rt:t.getAllRelationshipTypes()) {
+   	 	//for(RelationshipType rt:db.getAllRelationshipTypes()) {
    	 		relSet.put(rt.toString(), 0.0);
    	 	}
    	 	
    	 	//getting relationship count for each type
-   	 	
-   	 	for(Relationship r:db.getAllRelationships()) {
+		for(Relationship r:t.getAllRelationships()) {
+   	 	//for(Relationship r:db.getAllRelationships()) {
    	 		type=r.getType().toString();
    	 		value=relSet.get(type)+1;
    	 		relSet.put(type, value);
@@ -68,7 +66,8 @@ public class WeightingGraphProcBatched {
    	 	}
    	 	
    	 	//update
-   	 	for(Relationship r:db.getAllRelationships()) {
+		for(Relationship r:t.getAllRelationships()) {
+   	 	//for(Relationship r:db.getAllRelationships()) {
    	 		if(r.getProperty("exemplarWeight", null)==null){
    	 			type=r.getType().toString();
    	 			value=relSet.get(type);
@@ -79,11 +78,15 @@ public class WeightingGraphProcBatched {
    	 				break;
    	 		}
    	 	}
+
+		t.commit();
+		t.close();
+
    	 	if(modified) {
    	   	 	List<Node> returnList=new ArrayList<Node>();
    	 		Node n = null;
    	 		returnList.add(n);
-   	 		return returnList.stream().map(t->new Output(t));
+   	 		return returnList.stream().map(c->new Output(c));
    	 	}
    	 	else
    	 		return null;
