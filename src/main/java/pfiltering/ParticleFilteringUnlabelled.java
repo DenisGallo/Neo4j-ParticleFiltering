@@ -45,6 +45,7 @@ public class ParticleFilteringUnlabelled {
 	 * http://dx.doi.org/10.5441/002/edbt.2020.54
 	 *
 	 * @param nodeList the list of the starting nodes for the algorithm
+	 * @param nodeWeights a list of the weights assigned to each starting node. If set to null then all nodes have the same weight
 	 * @param minThreshold the minimum threshold a node needs to each to be considered in the result list
 	 * @param num_particles the number of particles to inject to the starting nodes
 	 * @return a list of nodes with an attached score based on the particle filtering algorithm
@@ -53,7 +54,7 @@ public class ParticleFilteringUnlabelled {
     //procedure declaration
     @Procedure(value = "particlefiltering.unlabelled", mode=Mode.READ)
     @Description("Returns nodes and an attached score given a nodeList, a score threshold, a #particles variable")
-    public Stream<Output> search( @Name("nodeList") List<Node> nodeList, @Name("threshold") Double minThreshold, @Name("particles") Double num_particles){
+    public Stream<Output> search( @Name("nodeList") List<Node> nodeList, @Name("nodeWeights") List<Double> nodeWeights, @Name("threshold") Double minThreshold, @Name("particles") Double num_particles){
     	
 
         
@@ -70,11 +71,16 @@ public class ParticleFilteringUnlabelled {
     	Map<Long, Double> pprNodes= new HashMap<>(); //resulting list containing nodes and scores
 		Transaction t=db.beginTx();
     	
-    	
-    	for(Node n:nodeList) {
-    		p.put(n.getId(), ((1.0/nodeList.size())*(num_particles))); 
-    		v.put(n.getId(), ((1.0/nodeList.size())*(num_particles))); 
-    	}
+		// If the nodeWeights list is not specified then populate it and set it to 1.0s
+    	if (nodeWeights == null) {
+			nodeWeights = new ArrayList<Double>(Collections.nCopies(nodeList.size(), 1.0));
+        }
+
+        for(Integer i=0; i<nodeList.size(); i++) {
+			p.put(n.getId(), ((1.0/nodeList.size())*(num_particles*nodeWeights.get(i)))); 
+			v.put(n.getId(), ((1.0/nodeList.size())*(num_particles*nodeWeights.get(i)))); 
+		}
+
     	while(!p.isEmpty()) {
     		aux= new HashMap<>();
     		for(Long node:p.keySet()) {
