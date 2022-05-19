@@ -77,6 +77,7 @@ public class ParticleFilteringUnlabelled {
         }
 
         for(Integer i=0; i<nodeList.size(); i++) {
+			Node n = nodeList.get(i);
 			p.put(n.getId(), ((1.0/nodeList.size())*(num_particles*nodeWeights.get(i)))); 
 			v.put(n.getId(), ((1.0/nodeList.size())*(num_particles*nodeWeights.get(i)))); 
 		}
