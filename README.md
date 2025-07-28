@@ -84,7 +84,6 @@ WITH n as ids, rand() as r
 ORDER BY r 
 LIMIT 2 
 WITH collect(ids) as idList
-
 CALL particlefiltering(idList, 0, 1000) 
 YIELD nodeId, score 
 MATCH (n) WHERE elementId(n) = nodeId
@@ -92,5 +91,5 @@ RETURN n, score
 ORDER BY score DESC
 ```
 
-In the first part 2 random nodes with degree>20 are collected and transformed into a list, in the second part the particlefiltering algorithm is executed with the list, a threshold and initial particles as inputs. Results are printed as rows of <nodeId, score> ordered by the score.
+In the first part 2 random nodes with degree>20 are collected and transformed into a list, in the second part the particlefiltering algorithm is executed with the list, a threshold and initial particles as inputs. Results are printed as <node, score> ordered by the score.
 
