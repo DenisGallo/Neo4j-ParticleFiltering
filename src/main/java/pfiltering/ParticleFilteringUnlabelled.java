@@ -60,15 +60,15 @@ public class ParticleFilteringUnlabelled {
         
         //particle filtering
 
-    	Map<Long,Double> p= new HashMap<>();
-    	Map<Long,Double> v= new HashMap<>();
-    	Map<Long, Double> aux;
+    	Map<String,Double> p= new HashMap<>();
+    	Map<String,Double> v= new HashMap<>();
+    	Map<String, Double> aux;
     	double passing;
     	double c=0.15;
     	double tao=1.0/num_particles;
     	double min_threshold=minThreshold;
-    	List<Long> neighbours;
-    	Map<Long, Double> pprNodes= new HashMap<>(); //resulting list containing nodes and scores
+    	List<String> neighbours;
+    	Map<String, Double> pprNodes= new HashMap<>(); //resulting list containing nodes and scores
 		Transaction t=db.beginTx();
     	
 		// If the nodeWeights list is not specified then populate it and set it to 1.0s
@@ -78,24 +78,24 @@ public class ParticleFilteringUnlabelled {
 
         for(Integer i=0; i<nodeList.size(); i++) {
 			Node n = nodeList.get(i);
-			p.put(n.getId(), ((1.0/nodeList.size())*(num_particles*nodeWeights.get(i)))); 
-			v.put(n.getId(), ((1.0/nodeList.size())*(num_particles*nodeWeights.get(i)))); 
+			p.put(n.getElementId(), ((1.0/nodeList.size())*(num_particles*nodeWeights.get(i))));
+			v.put(n.getElementId(), ((1.0/nodeList.size())*(num_particles*nodeWeights.get(i))));
 		}
 
     	while(!p.isEmpty()) {
     		aux= new HashMap<>();
-    		for(Long node:p.keySet()) {
+    		for(String node:p.keySet()) {
     			double particles=p.get(node)*(1-c);
-    			Node startingNode=t.getNodeById(node);
+    			Node startingNode=t.getNodeByElementId(node);
     			//Node startingNode=db.getNodeById(node);
     			neighbours= new ArrayList<>();
     			int neighboursCount=0;
     			for(Relationship relationship:startingNode.getRelationships()){
-    				neighbours.add(relationship.getOtherNode(startingNode).getId());
+    				neighbours.add(relationship.getOtherNode(startingNode).getElementId());
     				neighboursCount++;
     			}
     			Collections.shuffle(neighbours);
-    			for(Long n:neighbours) {
+    			for(String n:neighbours) {
     				if (particles<=tao)
     					break;
     				passing=particles/(neighboursCount);
@@ -109,7 +109,7 @@ public class ParticleFilteringUnlabelled {
     			}
     		}
     		p=aux;
-    		for(Long node:p.keySet()) {
+    		for(String node:p.keySet()) {
     			if(v.containsKey(node)) {
     				double value=v.get(node)+p.get(node);
     				v.put(node, value);
@@ -120,7 +120,7 @@ public class ParticleFilteringUnlabelled {
     	}
     	
     	//filtering v with min_threshold
-    	for (Entry<Long, Double> e:v.entrySet()) {
+    	for (Entry<String, Double> e:v.entrySet()) {
     		if(e.getValue()>=min_threshold)
     			pprNodes.put(e.getKey(), e.getValue());
     	}
@@ -139,10 +139,10 @@ public class ParticleFilteringUnlabelled {
 
         
     public class Neighbour implements Comparable<Neighbour> {
-        private Long key;
+        private String key;
         private double value;
 
-        public Neighbour(Long key, double value) {
+        public Neighbour(String key, double value) {
             this.key = key;
             this.value = value;
         }
@@ -151,7 +151,7 @@ public class ParticleFilteringUnlabelled {
         	return this.value;
         }
         
-        public Long getKey() {
+        public String getKey() {
         	return this.key;
         }
 
@@ -166,10 +166,10 @@ public class ParticleFilteringUnlabelled {
     }
     
     protected class Output{
-    	public long nodeId;
+    	public String nodeId;
     	public double score;
     	
-    	public Output(long nodeId, double score) {
+    	public Output(String nodeId, double score) {
     		this.nodeId=nodeId;
     		this.score=score;
     	}
